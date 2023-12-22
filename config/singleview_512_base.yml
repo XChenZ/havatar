@@ -1,0 +1,143 @@
+# Parameters to setup experiment.
+experiment:
+  # Seed for random number generators (for repeatability).
+  randomseed: 42  # Cause, why not?
+  # Number of training iterations.
+  train_iters: 1000000
+  # Number of training iterations after which to validate.
+  validate_every: 2000
+  # Number of training iterations after which to checkpoint.
+  save_every: 50000
+  # Number of training iterations after which to print progress.
+  print_every: 100
+  device: 0
+  latent_code_dim: 32
+  mask_weight: 0.01
+  rgb_loss: mse
+  model_mode: DoublePlane
+  patch_rgb: False
+  latent_perFrame: False
+  cond_pose: True
+  cond_expr: False
+  planeFeat_res: 256
+
+# Dataset parameters.
+dataset:
+  near: -1.6  # 这个范围需要确保
+  far: 1.0
+  length: 1.0
+  num_random_rays: 1024
+  down_sample: 1.0
+  cond_render_res: 256
+
+# Model parameters.
+models:
+  StyleUnet:
+    inp_size: 128
+    inp_ch: 64 #32 #64
+    out_ch: 64
+    out_size: 512
+
+  regularize_pose_skinning: True
+  Headpose_skin_net:
+    name: Motion_Weight_Vol
+
+  Exp_encoder:
+    exp_feat_dim: 64
+    max_p2m_sqr_dist: 0.0025
+  # Coarse model.
+  coarse:
+    Head_bounding: [[-1.2, 1.2], [-1.6, 1.0], [-1.6, 1.2]]
+    XYZ_bounding: [[-1.5, 1.5], [-1.6, 1.4], [-1.6, 1.2]]
+    # Name of the torch.nn.Module class that implements the model.
+    type: ConditionalBlendshapePaperNeRFModel #SIRENNerf #Nerf_SH #TriplaneNeRFSH #TriplaneNeRFModel #CombinedNeRFModel #ConditionalBlendshapePaperNeRFModel
+    # Number of layers in the model.
+    num_layers: 4
+    # Number of hidden units in each layer of the MLP (multi-layer
+    # perceptron).
+    hidden_size: 256
+    # Add a skip connection once in a while. Note: This parameter
+    # won't take affect unless num_layers > skip_connect_every.
+    skip_connect_every: 3
+    # Whether to include the position (xyz) itself in its positional
+    # encoding.
+    include_input_xyz: True
+    # Whether or not to perform log sampling in the positional encoding
+    # of the coordinates.
+    log_sampling_xyz: True
+    # Number of encoding functions to use in the positional encoding
+    # of the coordinates.
+    num_encoding_fn_xyz: 10
+    # Additionally use viewing directions as input.
+    use_viewdirs: True
+    # Whether to include the direction itself in its positional encoding.
+    include_input_dir: False
+    # Number of encoding functions to use in the positional encoding
+    # of the direction.
+    num_encoding_fn_dir: 4
+    # Whether or not to perform log sampling in the positional encoding
+    # of the direction.
+    log_sampling_dir: True
+
+# Optimizer params.
+optimizer:
+  # Name of the torch.optim class used for optimization.
+  type: Adam
+  # Learning rate.
+  lr: 5.0E-4
+
+# Learning rate schedule.
+scheduler:
+  # Exponentially decay learning rate (in 1000 steps)
+  lr_decay: 250
+  # Rate at which to apply this decay.
+  lr_decay_factor: 0.1
+
+# NeRF parameters.
+nerf:
+  # Use viewing directions as input, in addition to the X, Y, Z coordinates.
+  use_viewdirs: True
+  # Encoding function for position (X, Y, Z).
+  encode_position_fn: positional_encoding
+  # Encoding function for ray direction (theta, phi).
+  encode_direction_fn: positional_encoding
+  # Training-specific parameters.
+  train:
+    # Number of random rays to retain from each image.
+    # These sampled rays are used for training, and the others are discarded.
+#    num_random_rays: 3072  # 32 * 32 * 4 # was 1024
+    # Size of each chunk (rays are batched into "chunks" and passed through
+    # Size of each chunk (rays are batched into "chunks" and passed through
+    # the network)
+    chunksize: 4096 #16384  #131072  # 131072  # 1024 * 32
+    # Whether or not to perturb the sampled depth values.
+    perturb: True
+    # Number of depth samples per ray for the coarse network.
+    num_coarse: 48
+    # Number of depth samples per ray for the fine network.
+    num_fine: 24
+    # Whether to render models using a white background.
+    white_background: False
+    # Standard deviation of noise to be added to the radiance field when
+    # performing volume rendering.
+    radiance_field_noise_std: 0.1
+    # Sample linearly in disparity space, as opposed to in depth space.
+    lindisp: False
+  # Validation-specific parameters.
+  validation:
+    # Number of random rays to retain from each image.
+    # These sampled rays are used for training, and the others are discarded.
+    chunksize: 4096 #32768 #65536  #131072   # 1024 * 32
+    # Whether or not to perturb the sampled depth values.
+    perturb: True
+    # Number of depth samples per ray for the coarse network.
+    num_coarse: 48
+    # Number of depth samples per ray for the fine network.
+    num_fine: 24
+    # Whether to render models using a white background.
+    white_background: False
+    # Standard deviation of noise to be added to the radiance field when
+    # performing volume rendering.
+    radiance_field_noise_std: 0.
+    # Sample linearly in disparity space, as opposed to in depth space.
+    lindisp: False
