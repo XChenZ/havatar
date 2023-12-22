@@ -4,7 +4,7 @@
 ![Teaser image](./docs/teaser.png)
 
 **HAvatar: High-fidelity Head Avatar via Facial Model ConditionedNeural Radiance Field**<br>
-[Xiaochen Zhao](https://xiaochen-zhao.netlify.app/), [Lizhen Wang](https://lizhenwangt.github.io/), [Jingxiang Sun](https://mrtornado24.github.io/), [Hongwen Zhang](https://hongwenzhang.github.io/), [Yebin Liu](http://www.liuyebin.com/)<br><br>
+[Xiaochen Zhao](https://xiaochen-zhao.netlify.app/), [Lizhen Wang](https://lizhenwangt.github.io/), [Jingxiang Sun](https://mrtornado24.github.io/), [Hongwen Zhang](https://hongwenzhang.github.io/), Jinli Suo, [Yebin Liu](http://www.liuyebin.com/)<br><br>
 
 
 [**Project**](https://www.liuyebin.com/havatar/) | [**Paper**](https://arxiv.org/abs/2309.17128)
