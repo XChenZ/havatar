@@ -22,7 +22,7 @@ We also provide preprocessing code in `data_preprocessing`. If you want to gener
 
 ```.bash
 cd data_preprocessing
-python fit_video.py --video_path path/to/your/video --base_dir data/your_dataset
+python fit_video.py --video_path path/to/your/video --base_dir data/avatar
 ```
 
 
@@ -40,4 +40,24 @@ After convergence (we train about 20000 steps in this case, you can check the lo
 # Stage two
 
 python train_avatarHD.py --datadir data/demo --logdir logs/demo/HD --ckpt logs/demo/checkpoint200000.ckpt
+```
+
+## Animate Avatar
+
+### Self-Reenactment
+```.bash
+python avatarHD_reenactment.py --torch_test --savedir results/demo/self-recon --ckpt logs/demo/HD/latest.pt --split data/demo/sv_v31_all.json
+```
+
+### Cross-Reenactment
+
+```.bash
+# preprocess dataset
+
+cd data_preprocessing
+python fit_video.py --video_path path/to/your/actor_video --base_dir data/actor --avatar_tracking_dir data/demo
+```
+
+```.bash
+python avatarHD_reenactment.py --torch_test --savedir results/demo/cross-reenact --ckpt logs/demo/HD/latest.pt --split data/actor/drive_demo.json
 ```
