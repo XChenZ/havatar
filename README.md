@@ -16,9 +16,9 @@ Abstract: *The problem of modeling an animatable 3D human head avatar under ligh
 
 ### Prepare Dataset
 
-We provide a processed [demo dataset](). Please download and unzip it into `data/demo`.
+We provide a processed [demo dataset](https://drive.google.com/file/d/1hDM5jhS30QWu7qNHFQhlxxNPiL9oguaI/view?usp=sharing). Please download and unzip it into `data/demo`.
 
-We also provide preprocessing code in `data_preprocessing`. If you want to generate dataset from the video, please download [faceverse file]() (`data_preprocessing/metamodel/v3/faceverse_v3_1.npy`) and [RVM pretrained models](https://github.com/PeterL1n/RobustVideoMatting/releases/download/v1.0.0/rvm_resnet50_fp32.torchscript) (`data_preprocessing/BgMatting_models/rvm_resnet50_fp32.torchscript`).
+We also provide preprocessing code in `data_preprocessing`. If you want to generate dataset from the video, please download [faceverse file](https://drive.google.com/file/d/1lv2lGiTZet1pMIX4gUVy_wD4VYDOq1Tz/view?usp=drive_link) (`data_preprocessing/metamodel/v3/faceverse_v3_1.npy`) and [RVM pretrained models](https://github.com/PeterL1n/RobustVideoMatting/releases/download/v1.0.0/rvm_resnet50_fp32.torchscript) (`data_preprocessing/BgMatting_models/rvm_resnet50_fp32.torchscript`).
 
 ```.bash
 cd data_preprocessing
