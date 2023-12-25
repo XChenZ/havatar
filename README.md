@@ -1,4 +1,4 @@
-## Under Construction
+
 ## HAvatar: High-fidelity Head Avatar via Facial Model ConditionedNeural Radiance Field
 
 ![Teaser image](./docs/teaser.png)
@@ -44,7 +44,7 @@ python train_avatarHD.py --datadir data/demo --logdir logs/demo/HD --ckpt logs/d
 
 ## Animate Avatar
 
-We provide a pretrained monocular head avatar [checkpoint](), please download and put it into `logs/demo/HD`.
+We provide a pretrained monocular head avatar [checkpoint](https://drive.google.com/file/d/16pmbUPGWK7C3HpfTizWXf1K0M3JJ2a_x/view?usp=sharing), please download and put it into `logs/demo/HD`.
 
 ### Self-Reenactment
 ```.bash
@@ -63,3 +63,28 @@ python fit_video.py --video_path path/to/your/actor_video --base_dir data/actor 
 ```.bash
 python avatarHD_reenactment.py --torch_test --savedir results/demo/cross-reenact --ckpt logs/demo/HD/latest.pt --split data/actor/drive_demo.json
 ```
+
+## Citation
+
+```
+@article{zhao2023havatar,
+  author = {Zhao, Xiaochen and Wang, Lizhen and Sun, Jingxiang and Zhang, Hongwen and Suo, Jinli and Liu, Yebin},
+  title = {HAvatar: High-Fidelity Head Avatar via Facial Model Conditioned Neural Radiance Field},
+  year = {2023},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  issn = {0730-0301},
+  url = {https://doi.org/10.1145/3626316},
+  doi = {10.1145/3626316},
+  note = {Just Accepted},
+  journal = {ACM Trans. Graph.},
+  month = {oct},
+  keywords = {parametric facial model, image-to-image translation, image synthesis, head avatar, neural radiance field}
+}
+
+```
+
+## Acknowledgements
+
+Part of the code is borrowed from [Nerface](https://github.com/gafniguy/4D-Facial-Avatars) and [StyleAvatar](https://github.com/LizhenWangT/StyleAvatar).
+
