@@ -1407,9 +1407,9 @@ class SWGAN_unet(nn.Module):
             i += 2
 
         image = self.iwt(skip)
-        if return_latents:
-            return image, latent
-
-        else:
-            return image, None
+        return image
+        # if return_latents:
+        #     return image, latent
+        # else:
+        #     return image, None
 

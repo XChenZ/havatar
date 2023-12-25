@@ -16,8 +16,8 @@ import datetime
 import torch.nn.functional as F
 from utils.training_util import cast_to_image, mse2psnr, create_code_snapshot
 from utils.cfgnode import CfgNode
-from model_for_onnx.nerf_trainer_clean import Trainer
-# from model.nerf_trainer import Trainer
+# from model_for_onnx.nerf_trainer_clean import Trainer
+from model.nerf_trainer import Trainer
 import lpips
 
 

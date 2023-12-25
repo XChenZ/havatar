@@ -3,11 +3,11 @@ experiment:
   # Seed for random number generators (for repeatability).
   randomseed: 42  # Cause, why not?
   # Number of training iterations.
-  train_iters: 1000000
+  train_iters: 200000
   # Number of training iterations after which to validate.
   validate_every: 2000
   # Number of training iterations after which to checkpoint.
-  save_every: 50000
+  save_every: 5000
   # Number of training iterations after which to print progress.
   print_every: 100
   device: 0
@@ -15,7 +15,7 @@ experiment:
   mask_weight: 0.01
   rgb_loss: mse
   model_mode: DoublePlane
-  patch_rgb: False
+  patch_rgb: True
   latent_perFrame: False
   cond_pose: True
   cond_expr: False
@@ -113,9 +113,9 @@ nerf:
     # Whether or not to perturb the sampled depth values.
     perturb: True
     # Number of depth samples per ray for the coarse network.
-    num_coarse: 48
+    num_coarse: 64
     # Number of depth samples per ray for the fine network.
-    num_fine: 24
+    num_fine: 16
     # Whether to render models using a white background.
     white_background: False
     # Standard deviation of noise to be added to the radiance field when
@@ -131,9 +131,9 @@ nerf:
     # Whether or not to perturb the sampled depth values.
     perturb: True
     # Number of depth samples per ray for the coarse network.
-    num_coarse: 48
+    num_coarse: 64
     # Number of depth samples per ray for the fine network.
-    num_fine: 24
+    num_fine: 16
     # Whether to render models using a white background.
     white_background: False
     # Standard deviation of noise to be added to the radiance field when

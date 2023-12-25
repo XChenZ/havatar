@@ -41,7 +41,7 @@ class NonRigid_Deformation_Net(torch.nn.Module):
 
 
 class Deformation_Field_new(torch.nn.Module):
-    def __init__(self, gridwarper=None, options=None, need_nr=False):
+    def __init__(self, gridwarper=None, options=None, need_nr=False, eval=False):
         super(Deformation_Field_new, self).__init__()
         self.canonical_Wvolume = VolumeDecoder(num_in=options['init_length'] if options is not None else 1024, num_out=1,
                                                final_res=options['vol_res'] if options is not None else 64,#16,
@@ -50,8 +50,17 @@ class Deformation_Field_new(torch.nn.Module):
         self.register_buffer('identity_trans', torch.eye(4, dtype=torch.float32)[:, :-1])
         # self.update_head_T = None
         self.nr_motion_field = None
+        self.fix_canoW = False
         if need_nr:
             self.nr_motion_field = NonRigid_Deformation_Net()
+
+    def fix_canonical_W(self):
+        self.fix_canoW = True
+        self.canonical_W = self.canonical_Wvolume().detach()
+        self.canonical_W[:, 1:, :, 0, :] = 1.0
+        self.canonical_W[:, 1:, :1, :self.canonical_W.shape[-1] // 8, :] = 1.0
+        self.canonical_W = torch.cat([1 - self.canonical_W[:, 1:], self.canonical_W[:, 1:]], dim=1)
+
 
     def sample_volume(self, pts, padding_mode='border'):
         # pts [N, 3]
@@ -67,7 +76,7 @@ class Deformation_Field_new(torch.nn.Module):
         batch_size = inv_Trans.shape[0]
         inv_Trans_ls = [self.identity_trans.unsqueeze(0).expand(batch_size, -1, -1), inv_Trans]
         pts_inv_ls = []
-        w_c = self.canonical_Wvolume().expand(batch_size, -1, -1, -1, -1)  # [1, 2, 32, 32, 32] ### 分chunk时会重复计算
+        w_c = self.canonical_W.expand(batch_size, -1, -1, -1, -1) if self.fix_canoW else self.canonical_Wvolume().expand(batch_size, -1, -1, -1, -1)
         pts_wc = []
         for i in range(len(inv_Trans_ls)):
             inv_T = inv_Trans_ls[i]
@@ -88,32 +97,6 @@ class Deformation_Field_new(torch.nn.Module):
             out_pts_c = self.nr_motion_field(out_pts_c, inv_Trans)
         return out_pts_c, out_pts_view_c#, pts_wc[0]
 
-    # def forward(self, pts, pts_view, inv_Trans):
-    #     '''
-    #     :param pts: [B, N, 3]
-    #     :param pose_rot: [B, 3, 3]
-    #     :return:
-    #     '''
-    #     batch_size = inv_Trans.shape[0]
-    #     inv_Trans_ls = [self.identity_trans.unsqueeze(0).expand(batch_size, -1, -1), inv_Trans]
-    #     pts_inv_ls = []
-    #     self.w_c = self.canonical_Wvolume().expand(batch_size, -1, -1, -1, -1)  # [1, 2, 32, 32, 32]
-    #     pts_wc = []
-    #     for i in range(len(inv_Trans_ls)):
-    #         pts_inv = torch.matmul(pts + inv_Trans_ls[i][:, -1:], inv_Trans_ls[i][:, :3, :3])
-    #         pts_inv_ls.append(pts_inv)
-    #         pts_wc.append(voxel_feature(xyz=self.gridwarper(pts_inv), volume_feat=self.w_c[:, i:i+1])) # [B, N, 1]
-    #     self.pts_wc = torch.cat(pts_wc, -1)  # [B, N, 2]
-    #     self.pts_w = self.pts_wc / (self.pts_wc.sum(dim=-1, keepdim=True) + 1e-8)  # [B, N, 2]
-    #     if self.pts_wc.requires_grad:
-    #         self.pts_wc.retain_grad()   ######
-    #         self.w_c.retain_grad()
-    #         self.pts_w.retain_grad()
-    #     pts_c, pts_view_c = [], []
-    #     for i in range(len(pts_inv_ls)):
-    #         pts_c.append(self.pts_w[:, :, i:i+1] * pts_inv_ls[i])
-    #         pts_view_c.append(self.pts_w[:, :, i:i+1] * (torch.matmul(pts_view, inv_Trans_ls[i][:, :3, :3])))
-    #     return sum(pts_c), sum(pts_view_c)
 
     def pretrain_wc(self, num_iter=1, lr=1e-3, save_path=None, pose_space=False, vol_thr=None):
         if vol_thr is None: vol_thr = [[-0.5, 0.5], [-0.8, 0.5], [-0.3, 1.0]]

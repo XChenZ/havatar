@@ -15,8 +15,6 @@ experiment:
   mask_weight: 0.01
   rgb_loss: mse
   model_mode: DoublePlane #MeshNerf #Nerface #DoublePlane
-  use_Unet: True
-  mod_exp: True
   patch_sampling: 0
   cond_pose: True
   cond_expr: False
@@ -144,9 +142,9 @@ nerf:
     # Whether or not to perturb the sampled depth values.
     perturb: True
     # Number of depth samples per ray for the coarse network.
-    num_coarse: 48
+    num_coarse: 64
     # Number of depth samples per ray for the fine network.
-    num_fine: 24
+    num_fine: 16
     # Whether to render models using a white background.
     white_background: False
     # Standard deviation of noise to be added to the radiance field when
@@ -162,9 +160,9 @@ nerf:
     # Whether or not to perturb the sampled depth values.
     perturb: True
     # Number of depth samples per ray for the coarse network.
-    num_coarse: 48
+    num_coarse: 64
     # Number of depth samples per ray for the fine network.
-    num_fine: 24
+    num_fine: 16
     # Whether to render models using a white background.
     white_background: False
     # Standard deviation of noise to be added to the radiance field when

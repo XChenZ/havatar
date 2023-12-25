@@ -101,7 +101,7 @@ def main():
         percep_loss_fn = lpips.LPIPS(net='vgg').to(device)
 
     # Load dataset
-    train_loader = Loader(split_file=os.path.join(configargs.datadir, 'mv_v31_all.json'), down_sample=cfg.dataset.down_sample,
+    train_loader = Loader(split_file=os.path.join(configargs.datadir, 'sv_v31_all.json'), down_sample=cfg.dataset.down_sample,
                           mode='train', batch_size=su_args.batch, options=cfg, white_bg=True)
 
     ##################################
