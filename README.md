@@ -44,6 +44,8 @@ python train_avatarHD.py --datadir data/demo --logdir logs/demo/HD --ckpt logs/d
 
 ## Animate Avatar
 
+We provide a pretrained monocular head avatar [checkpoint](), please download and put it into `logs/demo/HD`.
+
 ### Self-Reenactment
 ```.bash
 python avatarHD_reenactment.py --torch_test --savedir results/demo/self-recon --ckpt logs/demo/HD/latest.pt --split data/demo/sv_v31_all.json
