@@ -34,7 +34,7 @@ python fit_video.py --video_path path/to/your/video --base_dir data/avatar
 python train_avatar.py --datadir data/demo --logdir logs/demo
 ```
 
-After convergence (we train about 20000 steps in this case, you can check the loss with tensorboard), continue with the second training stage.
+After convergence (we train about 20000 steps in this case, you can check the loss with tensorboard), continue with the second training stage. To accelerate the convergence, we provide a [pretrained image translation module](https://drive.google.com/file/d/1Ltfs8LzWLLjcYy4pDXNbMBMrrc3kh8gN/view?usp=sharing). Please download an put it into `pretrained_models`.
 
 ```.bash
 # Stage two
