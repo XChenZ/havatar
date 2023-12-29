@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 from model.network.embedder import get_embedder
-from utils.pytorch3d_util import point2point_distance
 from flame.FLAME import FLAME
 
 class Morphable_model(object):
@@ -74,57 +73,3 @@ class NonRigid_Deformation_Net(torch.nn.Module):
             x = self.relu(x)
         out = self.fc_out(x)
         return out, out_feat_ls
-
-
-class MeshGuide_Deformation_Field(torch.nn.Module):
-    def __init__(self, model_type):
-        super(MeshGuide_Deformation_Field, self).__init__()
-        self.MModel = Morphable_model(model_type)
-        # self.register_buffer('identity_trans', torch.eye(4, dtype=torch.float32)[:, :-1])
-        self.deformation_mlp = NonRigid_Deformation_Net()
-        self.pe_alpha = None
-
-    def forward(self, pts, MModel_params, motion_latent):
-        '''
-        :param pts: [B, P, 3]
-        :MModel_params: [B, P, C]
-        :return:
-        '''
-        param_dict = MModel_params if type(MModel_params) is dict else self.MModel.split_params(MModel_params)
-        deformed_mesh_pts = self.MModel.get_verts(param_dict)   # [B, N, 3]
-        mesh_pts_shift = self.MModel.cano_verts - deformed_mesh_pts # [B, N, 3]
-
-        point_to_mesh_dists, idxs, _ = point2point_distance(pts, deformed_mesh_pts)
-
-        weight = 1. / torch.exp(point_to_mesh_dists).unsqueeze(-1) # [B, P, 1]
-        pts_mesh_guide_shifts = []
-        for b in range(pts.shape[0]):
-            pts_mesh_guide_shift = mesh_pts_shift[b][idxs[b]]  # [P, 3]
-            pts_mesh_guide_shifts.append(pts_mesh_guide_shift)
-        pts_mesh_guide_shifts = torch.stack(pts_mesh_guide_shifts, dim=0)   # [B, P, 3]
-        pts_mesh_guide_shifts = pts_mesh_guide_shifts * weight
-
-        if False:
-            print(pts.shape, deformed_mesh_pts.shape)
-            from utils.util import save_obj
-            save_obj('test.obj', v=deformed_mesh_pts[0].cpu().numpy())
-            save_obj('test0.obj', v=self.MModel.cano_verts[0].cpu().numpy())
-
-            pts = deformed_mesh_pts
-            point_to_mesh_dists, idxs, _ = point2point_distance(pts, deformed_mesh_pts)
-
-            weight = 1. / torch.exp(point_to_mesh_dists).unsqueeze(-1)  # [B, P, 1]
-            pts_mesh_guide_shifts = []
-            for b in range(pts.shape[0]):
-                pts_mesh_guide_shift = mesh_pts_shift[b][idxs[b]]  # [P, 3]
-                pts_mesh_guide_shifts.append(pts_mesh_guide_shift)
-            pts_mesh_guide_shifts = torch.stack(pts_mesh_guide_shifts, dim=0)  # [B, P, 3]
-            pts_mesh_guide_shifts = pts_mesh_guide_shifts * weight
-            save_obj('test1.obj', v=(pts + pts_mesh_guide_shifts)[0].cpu().numpy())
-            exit(0)
-
-        pts_mlp_shifts, pts_motion_feature_ls = self.deformation_mlp(torch.cat([pts, pts_mesh_guide_shifts], dim=-1),
-                                                                     motion_latent, self.pe_alpha)
-        pts_shifts = pts_mesh_guide_shifts + pts_mlp_shifts
-
-        return pts + pts_shifts, pts_motion_feature_ls[-1]
