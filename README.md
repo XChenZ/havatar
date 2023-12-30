@@ -61,7 +61,7 @@ python fit_video.py --video_path path/to/your/actor_video --base_dir data/actor 
 ```
 
 ```.bash
-python avatarHD_reenactment.py --torch_test --savedir results/demo/cross-reenact --ckpt logs/demo/HD/latest.pt --split data/actor/drive_demo.json
+python avatarHD_reenactment.py --savedir results/demo/cross-reenact --ckpt logs/demo/HD/latest.pt --split data/actor/drive_demo.json
 ```
 
 ## Citation
