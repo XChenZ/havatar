@@ -269,7 +269,6 @@ dependencies:
     - triton==2.0.0
     - typeguard==3.0.2
     - typing-extensions==4.5.0
-    - upfirdn2d==0.0.0
     - urllib3==1.26.7
     - wandb==0.12.9
     - wcwidth==0.2.5
