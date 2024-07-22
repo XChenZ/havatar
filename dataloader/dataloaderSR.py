@@ -43,7 +43,7 @@ class MultiView_ImgDataset(Dataset):
         self.frames = []
         for tmp_frame_dict in meta['frames']:
             for vidx in range(len(tmp_frame_dict["mutiview_info_ls"])):
-                if tmp_frame_dict["mutiview_info_ls"][vidx]['view_name'] == '8': continue  #####
+                # if tmp_frame_dict["mutiview_info_ls"][vidx]['view_name'] == '8': continue  #####
                 tmp_frame_dict_ = copy.deepcopy(tmp_frame_dict)
                 tmp_frame_dict_['vidx'] = vidx
                 self.frames.append(tmp_frame_dict_)
